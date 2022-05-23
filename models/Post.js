@@ -12,24 +12,18 @@ const GeoSchema = mongoose.Schema({
   },
   coordinates: {
     type: [Number], 
-    
   },
-  _id:false,
- 
-    timestamps: false,
-  
 })
+
 const postSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
-      default: () => uuidv4().replace(/\-/g, ""),
     },
     content: String,
     postedByUser: String,
     address: String,
     location:GeoSchema
-
   },
   {
     timestamps: true,
@@ -37,7 +31,7 @@ const postSchema = new mongoose.Schema(
   }
 );
 
- postSchema.statics.createPost = async function (content, postedByUser, address,location) {
+  postSchema.statics.createPost = async function (content, postedByUser, address,location) {
     try {
       const post = await this.create({ content, postedByUser,address, location });
       return post;
@@ -49,19 +43,14 @@ const postSchema = new mongoose.Schema(
   postSchema.statics.getPostByNearest = async function (id) {
     try {
      const user = await UserModel.getUserById(id);
-      if (!user) throw ({ error: 'No user with this id found' });
+      if (!user) throw ({ error: 'userID not found' });
       return this.find(
         {
-           "location": {
-             $near: {
-               $geometry: {
-                  type: "Point" ,
-                  coordinates: user.location.coordinates
-               },
-             }
-           }
-        }
-        ) ;
+        "location": {
+          $near: {
+          $geometry: {
+            type: "Point" ,
+              coordinates: user.location.coordinates},}}}) ;
     } catch (error) {
       throw error;
     }
@@ -77,41 +66,30 @@ const postSchema = new mongoose.Schema(
             let:{userId:"$postedByUser"},
             pipeline:[
               { $match:
-                { $expr:
-                 {  $and:
-                    [
-                      {$eq:["$_id","$$userId"]}
-                    ]
-                  }
-                }
-              },
-          ],
-          as:"postedBy"
-        }
-      },
+              { $expr:
+              {  $and:
+                [
+                {$eq:["$_id","$$userId"]}
+                ]
+              }}},],
+            as:"postedBy"
+        }},
       {
         $lookup:
-              {
-                from:"comments",
-                let:{post_id:"$_id"},
-                pipeline:[
-                  { $match:
-                    { $expr:
-                     {  $and:
-                        [
-                          {$eq:["$postId","$$post_id"]}
-                        ]
-                      }
-                    }
-                  },
-                  {$sort: {"createdAt":-1},
-                  },
-                   { $limit: 3 },
-                    ],
-                 as:"comments"
-               }  
-      }
-      ]);
+          {
+            from:"comments",
+            let:{post_id:"$_id"},
+            pipeline:[
+              { $match:
+              { $expr:
+              { $and:
+                [
+                {$eq:["$postId","$$post_id"]}
+                ]}}},
+              {$sort: {"createdAt":-1},},
+              { $limit: 3 },],
+
+            as:"comments"}}]);
     } catch (error) {
       throw error;
     }
@@ -122,7 +100,7 @@ const postSchema = new mongoose.Schema(
       const result = await this.remove({ postedByUser: id });
       return result;
     } catch (error) {
-      throw "you cannot delete others post";
+      throw "Cannot delete this post!!!";
     }
   }
 
