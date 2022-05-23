@@ -8,7 +8,7 @@ const GeoSchema = mongoose.Schema({
     default: "Point",
   },
   coordinates: {
-    type: [Number], //the type is an array of numbers
+    type: [Number], 
     
   },
   _id:false,
@@ -35,12 +35,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-/**
- * @param {String} firstName
- * @param {String} lastName
- * @param {String} address
- * @returns {Object} new user object created
- */
 userSchema.statics.createUser = async function (firstName, lastName,address,location) {
   try {
     const user = await this.create({ firstName, lastName,address, location });
@@ -50,10 +44,6 @@ userSchema.statics.createUser = async function (firstName, lastName,address,loca
   }
 }
 
-/**
- * @param {String} id, user id
- * @return {Object} User profile object
- */
 userSchema.statics.getUserById = async function (id) {
   try {
     const user = await this.findOne({ _id: id });
@@ -64,9 +54,6 @@ userSchema.statics.getUserById = async function (id) {
   }
 }
 
-/**
- * @return {Array} List of all users
- */
 userSchema.statics.getUsers = async function () {
   try {
     const users = await this.find();
@@ -76,10 +63,6 @@ userSchema.statics.getUsers = async function () {
   }
 }
 
-/**
- * @param {Array} ids, string of user ids
- * @return {Array of Objects} users list
- */
 userSchema.statics.getUserByIds = async function (ids) {
   try {
     const users = await this.find({ _id: { $in: ids } });
@@ -88,11 +71,6 @@ userSchema.statics.getUserByIds = async function (ids) {
     throw error;
   }
 }
-
-/**
- * @param {String} id - id of user
- * @return {Object} - details of action performed
- */
 userSchema.statics.deleteByUserById = async function (id) {
   try {
     const result = await this.remove({ _id: id });

@@ -54,7 +54,7 @@ onCreatePost: async (req, res) => {
         message: `Deleted a count of ${post.deletedCount} post.` 
       });
     } catch (error) {
-      return res.status(500).json({ success: false, error: 'you cannot delete other post' })
+      return res.status(500).json({ success: false, error: 'Cannot delete a post' })
     }
   },
 }

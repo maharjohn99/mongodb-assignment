@@ -11,7 +11,7 @@ const GeoSchema = mongoose.Schema({
     default: "Point",
   },
   coordinates: {
-    type: [Number], //the type is an array of numbers
+    type: [Number], 
     
   },
   _id:false,
@@ -19,7 +19,6 @@ const GeoSchema = mongoose.Schema({
     timestamps: false,
   
 })
-
 const postSchema = new mongoose.Schema(
   {
     _id: {
@@ -38,12 +37,6 @@ const postSchema = new mongoose.Schema(
   }
 );
 
-/**
- * @param {String} content
- * @param {String} postedByUser
- * @param {String} location
- * @returns {Object} new user object created
- */
  postSchema.statics.createPost = async function (content, postedByUser, address,location) {
     try {
       const post = await this.create({ content, postedByUser,address, location });
@@ -76,7 +69,6 @@ const postSchema = new mongoose.Schema(
 
   postSchema.statics.getPostsWithComments = async function () {
     try {
-      
       return this.aggregate([
          {
           $lookup:
@@ -92,14 +84,13 @@ const postSchema = new mongoose.Schema(
                     ]
                   }
                 }
-         },
-          {  $project:{_id:0}  }
+              },
           ],
           as:"postedBy"
-          }
+        }
       },
       {
-            $lookup:
+        $lookup:
               {
                 from:"comments",
                 let:{post_id:"$_id"},
@@ -112,28 +103,14 @@ const postSchema = new mongoose.Schema(
                         ]
                       }
                     }
-                   
-           },
-
-           {  $project:{_id:0}  },
-           {
-            $sort: {
-              "createdAt":-1
-            },
-
-            
-            
-           
-          },
-          { $limit: 3 },
-           ],
-           as:"commentings"
-           }   
-
-           
+                  },
+                  {$sort: {"createdAt":-1},
+                  },
+                   { $limit: 3 },
+                    ],
+                 as:"comments"
+               }  
       }
-      
-      
       ]);
     } catch (error) {
       throw error;

@@ -8,6 +8,6 @@ router
   .get('/', post.onGetAllPosts)
   .post('/', post.onCreatePost)
    .get('/nearestpost', post.onGetPostByNearest)
-   .delete('/ownpost', post.onDeletePostById)
+   .delete('/myPost', post.onDeletePostById)
 
 export default router;

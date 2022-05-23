@@ -9,15 +9,15 @@ mongoose.connect(CONNECTION_URL, {
 })
 
 mongoose.connection.on('connected', () => {
-  console.log('Mongo has connected succesfully')
+  console.log('MongoServer has connected succesfully')
 })
 mongoose.connection.on('reconnected', () => {
-  console.log('Mongo has reconnected')
+  console.log('MongoServer has reconnected')
 })
 mongoose.connection.on('error', error => {
-  console.log('Mongo connection has an error', error)
+  console.log('MongoConnection has an error', error)
   mongoose.disconnect()
 })
 mongoose.connection.on('disconnected', () => {
-  console.log('Mongo connection is disconnected')
+  console.log('MongoConnection is disconnected')
 })
